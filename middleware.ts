@@ -85,6 +85,6 @@ export const config = {
      * - auth/callback (exclude to allow OAuth exchange)
      * - public files
      */
-    "/((?!_next/static|_next/image|favicon.ico|auth/callback|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|auth/|public|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
