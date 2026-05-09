@@ -16,6 +16,8 @@ export interface Game {
   rating: number;
   players: string;
   featured: boolean;
+  imageUrl?: string;
+  bannerUrl?: string;
 }
 
 export interface Package {

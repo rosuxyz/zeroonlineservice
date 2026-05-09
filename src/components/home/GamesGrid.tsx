@@ -77,13 +77,21 @@ export default function GamesGrid() {
                 >
                   {/* Banner */}
                   <div className={`w-full aspect-square bg-gradient-to-br ${game.gradient || 'from-gray-700 to-gray-900'} relative overflow-hidden flex items-center justify-center`}>
+                    {game.banner_url || game.bannerUrl ? (
+                      <img 
+                        src={game.banner_url || game.bannerUrl} 
+                        alt={game.name} 
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <span
+                        className="text-4xl sm:text-5xl font-black text-white/30 tracking-tighter -rotate-12 group-hover:scale-110 transition-transform duration-500 select-none"
+                        aria-hidden="true"
+                      >
+                        {game.short_name || game.shortName}
+                      </span>
+                    )}
                     <div className="absolute inset-0 bg-black/20 group-hover:bg-black/5 transition-colors duration-300" aria-hidden="true" />
-                    <span
-                      className="text-4xl sm:text-5xl font-black text-white/30 tracking-tighter -rotate-12 group-hover:scale-110 transition-transform duration-500 select-none"
-                      aria-hidden="true"
-                    >
-                      {game.short_name}
-                    </span>
                     <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#18181b] to-transparent" aria-hidden="true" />
                   </div>
 

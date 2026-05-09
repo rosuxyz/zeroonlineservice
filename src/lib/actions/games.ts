@@ -7,15 +7,21 @@ import { packages as mockPackages } from "@/data/packages";
 // Helper to normalize data so components work with both DB data and mock data
 function mapGame(dbGame: any) {
   if (!dbGame) return null;
+  const mockFallback = mockGames.find(g => g.id === dbGame.id || g.slug === dbGame.slug);
+  
   return {
     ...dbGame,
-    shortName: dbGame.short_name || dbGame.shortName,
-    accentColor: dbGame.accent_color || dbGame.accentColor,
-    longDescription: dbGame.long_description || dbGame.longDescription,
+    shortName: dbGame.short_name || dbGame.shortName || mockFallback?.shortName,
+    accentColor: dbGame.accent_color || dbGame.accentColor || mockFallback?.accentColor,
+    longDescription: dbGame.long_description || dbGame.longDescription || mockFallback?.longDescription,
+    imageUrl: dbGame.image_url || dbGame.imageUrl || mockFallback?.imageUrl,
+    bannerUrl: dbGame.banner_url || dbGame.bannerUrl || mockFallback?.bannerUrl,
     // Add aliases to satisfy components expecting snake_case
-    short_name: dbGame.short_name || dbGame.shortName,
-    accent_color: dbGame.accent_color || dbGame.accentColor,
-    long_description: dbGame.long_description || dbGame.longDescription,
+    short_name: dbGame.short_name || dbGame.shortName || mockFallback?.shortName,
+    accent_color: dbGame.accent_color || dbGame.accentColor || mockFallback?.accentColor,
+    long_description: dbGame.long_description || dbGame.longDescription || mockFallback?.longDescription,
+    image_url: dbGame.image_url || dbGame.imageUrl || mockFallback?.imageUrl,
+    banner_url: dbGame.banner_url || dbGame.bannerUrl || mockFallback?.bannerUrl,
   };
 }
 

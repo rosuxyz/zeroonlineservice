@@ -16,7 +16,6 @@ export const metadata: Metadata = {
     "Zero topuphub is your ultimate source for instant, secure, and reliable game top-ups for Free Fire, PUBG Mobile, Valorant, and more.",
   keywords: ["game top-up", "free fire", "pubg mobile", "valorant points", "gaming", "Nepal"],
   authors: [{ name: "Zero topuphub" }],
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   openGraph: {
     title: "Zero topuphub – Premium Game Top-Ups",
     description: "Instant, secure, and reliable game top-ups.",

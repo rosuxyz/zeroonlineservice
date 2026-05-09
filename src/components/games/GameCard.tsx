@@ -26,26 +26,34 @@ export function GameCard({ game, index = 0 }: GameCardProps) {
         aria-label={`Top up ${game.name}`}
       >
         <div className="relative glass-card rounded-2xl overflow-hidden h-full flex flex-col transition-all duration-300 group-hover:-translate-y-1.5">
-          {/* Banner */}
           <div
             className={cn(
               "relative w-full h-40 sm:h-44 bg-gradient-to-br flex items-center justify-center overflow-hidden shrink-0",
               game.gradient
             )}
           >
+            {game.banner_url || game.bannerUrl ? (
+              <img 
+                src={game.banner_url || game.bannerUrl} 
+                alt={game.name} 
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+              />
+            ) : (
+              <span
+                className="text-5xl sm:text-6xl font-black text-white/25 tracking-tighter -rotate-12 group-hover:scale-110 group-hover:text-white/35 transition-all duration-500 select-none"
+                aria-hidden="true"
+              >
+                {game.shortName || game.short_name}
+              </span>
+            )}
             <div className="absolute inset-0 bg-black/25 group-hover:bg-black/10 transition-colors duration-300" />
-            <span
-              className="text-5xl sm:text-6xl font-black text-white/25 tracking-tighter -rotate-12 group-hover:scale-110 group-hover:text-white/35 transition-all duration-500 select-none"
-              aria-hidden="true"
-            >
-              {game.shortName}
-            </span>
+            
             {game.featured && (
-              <div className="absolute top-2.5 right-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full">
+              <div className="absolute top-2.5 right-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded-full z-10">
                 Featured
               </div>
             )}
-            <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#18181b] to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-[#18181b] to-transparent z-10" />
           </div>
 
           {/* Content */}

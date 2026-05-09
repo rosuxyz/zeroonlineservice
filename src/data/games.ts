@@ -18,6 +18,8 @@ export const games: Game[] = [
     rating: 4.6,
     players: "150M+",
     featured: true,
+    imageUrl: "/games/free-fire-logo.png",
+    bannerUrl: "/games/free-fire-banner.png"
   },
   {
     id: "pubg-mobile",
@@ -36,6 +38,8 @@ export const games: Game[] = [
     rating: 4.5,
     players: "100M+",
     featured: true,
+    imageUrl: "/games/pubg-logo.png",
+    bannerUrl: "/games/pubg-banner.png"
   },
   {
     id: "mobile-legends",
@@ -54,6 +58,8 @@ export const games: Game[] = [
     rating: 4.4,
     players: "80M+",
     featured: true,
+    imageUrl: "/games/mlbb-logo.png",
+    bannerUrl: "/games/mlbb-banner.png"
   },
   {
     id: "valorant",
@@ -72,6 +78,8 @@ export const games: Game[] = [
     rating: 4.7,
     players: "25M+",
     featured: true,
+    imageUrl: "/games/valorant-logo.png",
+    bannerUrl: "/games/valorant-banner.png"
   },
   {
     id: "genshin-impact",
@@ -90,6 +98,7 @@ export const games: Game[] = [
     rating: 4.8,
     players: "50M+",
     featured: false,
+    bannerUrl: "/games/banner-generic.png"
   },
   {
     id: "steam",
@@ -108,6 +117,7 @@ export const games: Game[] = [
     rating: 4.9,
     players: "130M+",
     featured: false,
+    bannerUrl: "/games/banner-generic.png"
   },
 ];
 
