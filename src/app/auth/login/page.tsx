@@ -174,9 +174,9 @@ export default function LoginPage() {
     <div className="min-h-screen bg-[#020202] flex flex-col relative overflow-hidden">
       {/* Liquid Nebula Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        {/* Massive drifting glows */}
-        <div className="absolute top-[-30%] left-[-20%] w-[120%] h-[120%] bg-primary-500/30 rounded-full blur-[250px] animate-[spin_20s_linear_infinite]" />
-        <div className="absolute bottom-[-30%] right-[-20%] w-[120%] h-[120%] bg-secondary-500/30 rounded-full blur-[250px] animate-[spin_25s_linear_infinite_reverse]" />
+        {/* Massive overlapping glows (Static) */}
+        <div className="absolute top-[-30%] left-[-20%] w-[120%] h-[120%] bg-primary-500/30 rounded-full blur-[250px]" />
+        <div className="absolute bottom-[-30%] right-[-20%] w-[120%] h-[120%] bg-secondary-500/30 rounded-full blur-[250px]" />
         
         {/* Extreme Global Blur Barrier */}
         <div className="absolute inset-0 bg-background/60 backdrop-blur-[50px]" />

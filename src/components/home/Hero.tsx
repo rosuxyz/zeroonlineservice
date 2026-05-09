@@ -1,21 +1,55 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Zap, ChevronRight, Gamepad2 } from "lucide-react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Zap, ChevronRight, Gamepad2, Gem, Coins, Trophy } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
 
 export default function Hero() {
+  // Mouse tracking for "Crazy" parallax effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  // Smooth out the movement
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Calculate position relative to center of screen
+      const x = (e.clientX - window.innerWidth / 2) / 25;
+      const y = (e.clientY - window.innerHeight / 2) / 25;
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  // Transfrom values for different layers
+  const driftX = useTransform(springX, (v) => v * -1.5);
+  const driftY = useTransform(springY, (v) => v * -1.5);
+  const rotateX = useTransform(springY, (v) => v * 0.5);
+  const rotateY = useTransform(springX, (v) => v * -0.5);
+
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center pt-20 overflow-hidden"
+      className="relative min-h-screen flex items-center pt-20 overflow-hidden group/hero"
       aria-label="Hero section"
     >
       {/* Background blobs — aria-hidden */}
       <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
         <div className="absolute top-1/4 left-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-primary-500/15 rounded-full blur-[100px]" />
         <div className="absolute bottom-1/4 right-1/4 w-64 sm:w-96 h-64 sm:h-96 bg-secondary-500/15 rounded-full blur-[100px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[500px] sm:h-[800px] bg-accent-500/8 rounded-full blur-[150px]" />
+        
+        {/* Mouse Following Aura */}
+        <motion.div 
+          style={{ x: springX.get() * 10, y: springY.get() * 10 }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[800px] h-[500px] sm:h-[800px] bg-primary-500/10 rounded-full blur-[150px] transition-colors group-hover/hero:bg-primary-400/20" 
+        />
+        
         <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20 [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]" />
       </div>
 
@@ -85,58 +119,64 @@ export default function Hero() {
             </div>
           </motion.div>
 
-          {/* Right: Visual — hidden on mobile/tablet */}
+          {/* Right: Visual — Interactive 3D Parallax Visual */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 }}
-            className="relative hidden lg:flex items-center justify-center"
+            style={{ x: springX, y: springY, rotateX, rotateY }}
+            className="relative hidden lg:flex items-center justify-center perspective-1000"
             aria-hidden="true"
           >
-            <div className="relative w-full max-w-md aspect-square">
-              {/* Floating card — Valorant */}
+            <div className="relative w-full max-w-md aspect-square transform-style-3d">
+              
+              {/* Floating Token 1: Diamond */}
               <motion.div
-                animate={{ y: [0, -18, 0] }}
+                style={{ x: driftX, y: driftY }}
+                animate={{ y: [0, -18, 0], rotate: [0, 5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute top-8 left-4 w-36 h-36 glass-card rounded-2xl p-4 -rotate-12 z-20 shadow-[0_0_30px_rgba(168,85,247,0.25)]"
+                className="absolute top-0 left-0 w-32 h-32 glass-card rounded-3xl p-6 z-30 shadow-[0_0_40px_rgba(14,165,233,0.3)] flex items-center justify-center"
               >
-                <div className="w-full h-full bg-gradient-to-br from-purple-500/20 to-transparent rounded-xl flex items-center justify-center">
-                  <span className="text-purple-300 font-bold text-base text-center leading-snug">Valorant<br />Points</span>
-                </div>
+                <Gem className="w-16 h-16 text-primary-400 drop-shadow-[0_0_8px_rgba(14,165,233,0.8)]" />
               </motion.div>
 
-              {/* Floating card — PUBG */}
+              {/* Floating Token 2: Coins */}
               <motion.div
-                animate={{ y: [0, 18, 0] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                className="absolute bottom-8 right-4 w-40 h-40 glass-card rounded-2xl p-4 rotate-6 z-20 shadow-[0_0_30px_rgba(14,165,233,0.25)]"
+                style={{ x: useTransform(springX, v => v * 1.5), y: useTransform(springY, v => v * 1.5) }}
+                animate={{ y: [0, 20, 0], rotate: [0, -8, 0] }}
+                transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute bottom-4 right-0 w-36 h-36 glass-card rounded-3xl p-6 z-30 shadow-[0_0_40px_rgba(168,85,247,0.3)] flex items-center justify-center"
               >
-                <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-transparent rounded-xl flex items-center justify-center">
-                  <span className="text-blue-300 font-bold text-base text-center leading-snug">PUBG<br />UC</span>
-                </div>
+                <Coins className="w-20 h-20 text-secondary-400 drop-shadow-[0_0_8px_rgba(168,85,247,0.8)]" />
               </motion.div>
 
-              {/* Floating card — Free Fire */}
+              {/* Floating Token 3: Trophy */}
               <motion.div
-                animate={{ y: [0, -14, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-                className="absolute top-1/2 -right-2 w-28 h-28 glass-card rounded-2xl p-3 rotate-12 z-20 shadow-[0_0_30px_rgba(234,179,8,0.25)]"
+                style={{ x: useTransform(springX, v => v * -2), y: useTransform(springY, v => v * -2) }}
+                animate={{ y: [0, -12, 0], rotate: [0, 12, 0] }}
+                transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                className="absolute top-1/2 -right-8 w-28 h-28 glass-card rounded-3xl p-5 z-30 shadow-[0_0_40px_rgba(234,179,8,0.3)] flex items-center justify-center"
               >
-                <div className="w-full h-full bg-gradient-to-br from-yellow-500/20 to-transparent rounded-xl flex items-center justify-center">
-                  <span className="text-yellow-300 font-bold text-sm text-center leading-snug">FF<br />Diamonds</span>
-                </div>
+                <Trophy className="w-14 h-14 text-yellow-400 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]" />
               </motion.div>
 
               {/* Orbit rings */}
-              <div className="absolute inset-8 rounded-full border border-white/8 animate-[spin_22s_linear_infinite]" />
-              <div className="absolute inset-16 rounded-full border border-primary-500/20 border-dashed animate-[spin_16s_linear_infinite_reverse]" />
+              <div className="absolute inset-4 rounded-full border border-white/5 animate-[spin_25s_linear_infinite]" />
+              <div className="absolute inset-12 rounded-full border border-primary-500/10 border-dashed animate-[spin_18s_linear_infinite_reverse]" />
+              <div className="absolute inset-24 rounded-full border border-secondary-500/10 animate-[spin_30s_linear_infinite]" />
 
               {/* Center orb */}
               <div className="absolute inset-0 flex items-center justify-center z-10">
-                <div className="w-52 h-52 bg-[#09090b] rounded-full border-4 border-primary-500 shadow-[0_0_60px_rgba(14,165,233,0.4)] flex items-center justify-center overflow-hidden relative animate-pulse-glow">
-                  <div className="absolute inset-0 bg-gradient-to-tr from-primary-500/15 to-secondary-500/15" />
-                  <Gamepad2 className="w-24 h-24 text-primary-400 relative z-10 drop-shadow-[0_0_12px_rgba(14,165,233,0.7)]" />
-                </div>
+                <motion.div 
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  className="w-56 h-56 bg-[#09090b] rounded-full border-4 border-primary-500 shadow-[0_0_80px_rgba(14,165,233,0.5)] flex items-center justify-center overflow-hidden relative animate-pulse-glow"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-tr from-primary-500/20 to-secondary-500/20" />
+                  <Gamepad2 className="w-28 h-28 text-primary-400 relative z-10 drop-shadow-[0_0_15px_rgba(14,165,233,0.8)]" />
+                  
+                  {/* Internal rotating light */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_3s_infinite]" />
+                </motion.div>
               </div>
             </div>
           </motion.div>
