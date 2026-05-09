@@ -109,7 +109,7 @@ export async function createOrder(data: {
 }
 
 export async function getUserOrders() {
-  const user = await getUser();
+  const user = await getUser().catch(() => null);
   if (!user) return [];
 
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {

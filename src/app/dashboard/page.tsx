@@ -27,7 +27,7 @@ function StatsList({ totalSpent, orders }: { totalSpent: number, orders: any[] }
   const statsData = [
     {
       title: "Total Spent",
-      value: `$${totalSpent.toFixed(2)}`,
+      value: typeof totalSpent === 'number' ? `$${totalSpent.toFixed(2)}` : '$0.00',
       icon: <DollarSign className="w-5 h-5" aria-hidden="true" />,
       change: "12%",
       positive: true,
