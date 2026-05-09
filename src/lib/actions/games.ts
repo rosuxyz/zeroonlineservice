@@ -35,19 +35,31 @@ function mapPackage(dbPkg: any) {
   };
 }
 
+const PREFERRED_ORDER = ["free-fire", "pubg-mobile", "mobile-legends", "valorant", "genshin-impact", "steam-wallet"];
+
+function sortGames(games: any[]) {
+  return [...games].sort((a, b) => {
+    const indexA = PREFERRED_ORDER.indexOf(a.slug);
+    const indexB = PREFERRED_ORDER.indexOf(b.slug);
+    if (indexA === -1 && indexB === -1) return 0;
+    if (indexA === -1) return 1;
+    if (indexB === -1) return -1;
+    return indexA - indexB;
+  });
+}
+
 export async function getGames() {
   try {
     const supabase = await getSupabaseServerClient();
     const { data, error } = await supabase
       .from("games")
       .select("*")
-      .eq("active", true)
-      .order("created_at", { ascending: false });
+      .eq("active", true);
 
-    if (error || !data || data.length === 0) return mockGames.map(mapGame);
-    return data.map(mapGame);
+    if (error || !data || data.length === 0) return sortGames(mockGames.map(mapGame));
+    return sortGames(data.map(mapGame));
   } catch (e) {
-    return mockGames.map(mapGame);
+    return sortGames(mockGames.map(mapGame));
   }
 }
 
@@ -58,15 +70,14 @@ export async function getFeaturedGames() {
       .from("games")
       .select("*")
       .eq("active", true)
-      .eq("featured", true)
-      .order("created_at", { ascending: false });
+      .eq("featured", true);
 
     if (error || !data || data.length === 0) {
-      return mockGames.filter((g) => g.featured).map(mapGame);
+      return sortGames(mockGames.filter((g) => g.featured).map(mapGame));
     }
-    return data.map(mapGame);
+    return sortGames(data.map(mapGame));
   } catch (e) {
-    return mockGames.filter((g) => g.featured).map(mapGame);
+    return sortGames(mockGames.filter((g) => g.featured).map(mapGame));
   }
 }
 
