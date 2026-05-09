@@ -1,4 +1,5 @@
 "use client";
+// Build trigger: Updated type safety for site settings
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";

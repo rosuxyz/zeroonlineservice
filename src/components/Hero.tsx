@@ -14,7 +14,7 @@ export default function Hero() {
 
   useEffect(() => {
     getSiteSettings("hero").then(data => {
-      if (data) setHero(data);
+      if (data) setHero(data as { title: string; subtitle: string });
     });
   }, []);
 

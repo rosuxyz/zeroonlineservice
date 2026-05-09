@@ -68,12 +68,17 @@ export async function createOrder(data: {
       id: user.id,
       email: user.email || "",
       full_name: user.user_metadata?.full_name || "User",
+      avatar_url: user.user_metadata?.avatar_url || "",
+      role: "user",
+      total_spent: 0,
     });
 
     const { data: retryOrder, error: retryError } = await supabase
       .from("orders")
       .insert({
         user_id: user.id,
+        game_id: null,
+        package_id: null,
         game_name: data.gameName,
         package_label: data.packageLabel,
         player_id: data.playerId,

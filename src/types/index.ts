@@ -20,6 +20,9 @@ export interface Game {
   bannerUrl?: string;
   image_url?: string;
   banner_url?: string;
+  short_name?: string;
+  accent_color?: string;
+  long_description?: string;
 }
 
 export interface Package {
