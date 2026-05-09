@@ -2,10 +2,15 @@ import { NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-  // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get("next") ?? "/dashboard";
+  const requestUrl = new URL(request.url);
+  const code = requestUrl.searchParams.get("code");
+  const next = requestUrl.searchParams.get("next") ?? "/dashboard";
+  
+  // Use the request headers to determine the correct origin (protocol + host)
+  // This is more reliable on Vercel/proxies than requestUrl.origin
+  const host = request.headers.get("host") || requestUrl.host;
+  const protocol = request.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
+  const origin = `${protocol}://${host}`;
 
   if (code) {
     const supabase = await getSupabaseServerClient();
@@ -15,6 +20,5 @@ export async function GET(request: Request) {
     }
   }
 
-  // return the user to an error page with instructions
   return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }
