@@ -46,7 +46,7 @@ function LoginForm() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
+          redirectTo: `${getURL()}/auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
         },
       });
       if (error) throw error;
@@ -61,7 +61,7 @@ function LoginForm() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "facebook",
         options: {
-          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
+          redirectTo: `${getURL()}/auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
         },
       });
       if (error) throw error;

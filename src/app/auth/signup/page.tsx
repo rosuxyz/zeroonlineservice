@@ -51,7 +51,7 @@ export default function SignupPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
+          redirectTo: `${getURL()}/auth/callback?next=${encodeURIComponent("/dashboard")}`,
         },
       });
       if (error) throw error;
@@ -66,7 +66,7 @@ export default function SignupPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "facebook",
         options: {
-          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
+          redirectTo: `${getURL()}/auth/callback?next=${encodeURIComponent("/dashboard")}`,
         },
       });
       if (error) throw error;
