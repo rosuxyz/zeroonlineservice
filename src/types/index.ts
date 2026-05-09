@@ -18,6 +18,8 @@ export interface Game {
   featured: boolean;
   imageUrl?: string;
   bannerUrl?: string;
+  image_url?: string;
+  banner_url?: string;
 }
 
 export interface Package {
