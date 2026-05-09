@@ -9,7 +9,7 @@ import { usePathname } from "next/navigation";
 //     Format: country code + number, no spaces / dashes / "+" sign
 //     Example: Nepal (+977) → "9779812345678"
 // ────────────────────────────────────────────────────────────────────
-const WHATSAPP_NUMBER = "9779800000000"; // ← replace with your real number
+const WHATSAPP_NUMBER = "9779829534853"; // ← Updated with user number
 const WHATSAPP_MESSAGE = "Hello! I'm interested in a game top-up. Can you help me?";
 
 export default function WhatsAppButton() {
