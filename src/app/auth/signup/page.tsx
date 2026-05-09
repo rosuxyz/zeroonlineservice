@@ -46,23 +46,33 @@ export default function SignupPage() {
   };
 
   const handleGoogleSignup = async () => {
-    const supabase = getSupabaseBrowserClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
-      },
-    });
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message || "Failed to start Google signup");
+    }
   };
 
   const handleFacebookSignup = async () => {
-    const supabase = getSupabaseBrowserClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "facebook",
-      options: {
-        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
-      },
-    });
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "facebook",
+        options: {
+          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message || "Failed to start Facebook signup");
+    }
   };
 
   return (

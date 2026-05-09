@@ -41,23 +41,33 @@ function LoginForm() {
   };
 
   const handleGoogleLogin = async () => {
-    const supabase = getSupabaseBrowserClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
-      },
-    });
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message || "Failed to start Google login");
+    }
   };
 
   const handleFacebookLogin = async () => {
-    const supabase = getSupabaseBrowserClient();
-    await supabase.auth.signInWithOAuth({
-      provider: "facebook",
-      options: {
-        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
-      },
-    });
+    try {
+      const supabase = getSupabaseBrowserClient();
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "facebook",
+        options: {
+          redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message || "Failed to start Facebook login");
+    }
   };
 
   return (
