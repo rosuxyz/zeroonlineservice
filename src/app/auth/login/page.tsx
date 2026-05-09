@@ -7,6 +7,7 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/Button";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Gem, AlertCircle, Loader2 } from "lucide-react";
+import { getURL } from "@/lib/utils";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -43,7 +44,7 @@ function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${redirectedFrom}`,
+        redirectTo: `${getURL()}auth/callback?next=${redirectedFrom}`,
       },
     });
   };
@@ -53,7 +54,7 @@ function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${redirectedFrom}`,
+        redirectTo: `${getURL()}auth/callback?next=${redirectedFrom}`,
       },
     });
   };

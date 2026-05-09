@@ -7,6 +7,7 @@ import { Navbar } from "@/components/Navbar";
 import { Button } from "@/components/ui/Button";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Gem, AlertCircle, CheckCircle2 } from "lucide-react";
+import { getURL } from "@/lib/utils";
 
 export default function SignupPage() {
   const [fullName, setFullName] = useState("");
@@ -31,7 +32,7 @@ export default function SignupPage() {
         data: {
           full_name: fullName,
         },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${getURL()}auth/callback`,
       },
     });
 
@@ -49,7 +50,7 @@ export default function SignupPage() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        redirectTo: `${getURL()}auth/callback?next=/dashboard`,
       },
     });
   };
@@ -59,7 +60,7 @@ export default function SignupPage() {
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=/dashboard`,
+        redirectTo: `${getURL()}auth/callback?next=/dashboard`,
       },
     });
   };
