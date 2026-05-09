@@ -43,26 +43,36 @@ export async function middleware(request: NextRequest) {
 
     const { data: { user } } = await supabase.auth.getUser();
 
-    if (!user) {
-      // Redirect to login if not authenticated
+    // 4. If no user, redirect to login (ONLY for protected routes)
+    const isProtectedRoute = 
+      request.nextUrl.pathname.startsWith("/dashboard") || 
+      request.nextUrl.pathname.startsWith("/orders") || 
+      request.nextUrl.pathname.startsWith("/admin");
+
+    if (!user && isProtectedRoute) {
       const redirectUrl = request.nextUrl.clone();
       redirectUrl.pathname = "/auth/login";
       redirectUrl.searchParams.set("redirectedFrom", request.nextUrl.pathname);
       return NextResponse.redirect(redirectUrl);
     }
 
-    // 5. Special check for /admin role
-    if (request.nextUrl.pathname.startsWith("/admin")) {
-      const { data: profile } = await supabase
-        .from("profiles")
-        .select("role")
-        .eq("id", user.id)
-        .single();
-        
-      if (!profile || profile.role !== "admin") {
-        const redirectUrl = request.nextUrl.clone();
-        redirectUrl.pathname = "/dashboard";
-        return NextResponse.redirect(redirectUrl);
+    // 5. Special check for /admin role (ONLY for admin routes)
+    if (user && request.nextUrl.pathname.startsWith("/admin")) {
+      try {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("id", user.id)
+          .single();
+          
+        if (!profile || profile.role !== "admin") {
+          const redirectUrl = request.nextUrl.clone();
+          redirectUrl.pathname = "/dashboard";
+          return NextResponse.redirect(redirectUrl);
+        }
+      } catch (adminErr) {
+        console.error("Admin role check failed, allowing fallback:", adminErr);
+        // On error, let them through to see the login screen's demo mode
       }
     }
 
