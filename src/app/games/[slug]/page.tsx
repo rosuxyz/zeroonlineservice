@@ -64,36 +64,50 @@ function GameDetailContent({ params }: PageProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      getGameBySlug(slug),
-      getGames()
-    ]).then(([fetchedGame, allGames]) => {
-      if (fetchedGame) {
-        setGame(fetchedGame);
-        getPackagesByGameId(fetchedGame.id).then(setPackages);
-        setRelatedGames(allGames.filter((g) => g.id !== fetchedGame.id).slice(0, 3));
-        
-        // Fix: Clear selected package if it belongs to a different game
-        if (
-          selectedPackage && 
-          selectedPackage.gameId !== fetchedGame.id && 
-          (selectedPackage as any).game_id !== fetchedGame.id
-        ) {
-          setSelectedPackage(null);
-        }
+    const loadGameData = async () => {
+      try {
+        setLoading(true);
+        // 1. Fetch basic game info and all games list in parallel
+        const [fetchedGame, allGames] = await Promise.all([
+          getGameBySlug(slug),
+          getGames()
+        ]);
 
-        // Handle pre-selected package from URL
-        if (pkgIdParam) {
-          getPackagesByGameId(fetchedGame.id).then((pkgs) => {
+        if (fetchedGame) {
+          setGame(fetchedGame);
+          
+          // 2. Fetch packages for this game
+          const pkgs = await getPackagesByGameId(fetchedGame.id);
+          setPackages(pkgs);
+          
+          // 3. Set related games
+          setRelatedGames(allGames.filter((g) => g.id !== fetchedGame.id).slice(0, 3));
+          
+          // Fix: Clear selected package if it belongs to a different game
+          if (
+            selectedPackage && 
+            selectedPackage.gameId !== fetchedGame.id && 
+            (selectedPackage as any).game_id !== fetchedGame.id
+          ) {
+            setSelectedPackage(null);
+          }
+
+          // Handle pre-selected package from URL (using the already fetched pkgs)
+          if (pkgIdParam) {
             const preselected = pkgs.find(p => p.id === pkgIdParam);
             if (preselected) {
               setSelectedPackage(preselected as any);
             }
-          });
+          }
         }
+      } catch (err) {
+        console.error("Error loading game data:", err);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
+
+    loadGameData();
   }, [slug, pkgIdParam]);
 
   if (loading) {
