@@ -7,9 +7,21 @@ import type { Database } from "./types";
 export async function getSupabaseServerClient() {
   const cookieStore = await cookies();
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error("CRITICAL: Supabase environment variables are missing!");
+    // If we're missing variables, we can't initialize. 
+    // Return a dummy client or throw a better error.
+    if (process.env.NODE_ENV === "development") {
+       throw new Error("NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY must be set in .env.local");
+    }
+  }
+
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    supabaseUrl || "",
+    supabaseAnonKey || "",
     {
       cookies: {
         getAll() {
@@ -28,7 +40,7 @@ export async function getSupabaseServerClient() {
       global: {
         fetch: (url, init) => {
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2000); // 2-second timeout
+          const timeoutId = setTimeout(() => controller.abort(), 10000); // Increased to 10-second timeout
           return fetch(url, { ...init, signal: controller.signal as any }).finally(() => clearTimeout(timeoutId));
         },
       },

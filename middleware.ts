@@ -18,9 +18,12 @@ export async function middleware(request: NextRequest) {
     }
 
     // Create a client just to read the user, don't modify cookies here (handled by updateSession)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
     const supabase = createServerClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      supabaseUrl || "",
+      supabaseAnonKey || "",
       {
         cookies: {
           getAll() {
