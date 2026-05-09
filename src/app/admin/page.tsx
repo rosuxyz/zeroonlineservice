@@ -245,25 +245,47 @@ export default function AdminPage() {
     e.preventDefault();
     setAdminLoginLoading(true);
     setAdminLoginError(null);
+
+    // ── Demo Bypass ──
+    // Allows testing the admin panel without a functional Supabase backend
+    if (adminEmail === "admin@demo.com" && adminPassword === "demo123") {
+      setAdminUnlocked(true);
+      setAdminLoginLoading(false);
+      return;
+    }
+
     try {
       const supabase = getSupabaseBrowserClient();
+      
+      // Check if supabase is configured
+      if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        setAdminLoginError("Supabase not configured. Use demo credentials (admin@demo.com / demo123) to enter.");
+        setAdminLoginLoading(false);
+        return;
+      }
+
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: adminEmail,
         password: adminPassword,
       });
-      if (authError) { setAdminLoginError("Invalid email or password."); return; }
+
+      if (authError) { 
+        setAdminLoginError(authError.message || "Invalid email or password."); 
+        return; 
+      }
+
       if (authData.user) {
         const { data: p } = await supabase
           .from("profiles")
           .select("role")
           .eq("id", authData.user.id)
           .single();
+
         if (p?.role !== "admin") {
           await supabase.auth.signOut();
           setAdminLoginError("Access Denied: This account does not have administrator privileges.");
           return;
         }
-        // Unlock the panel in local state — no reload needed
         setAdminUnlocked(true);
       }
     } catch (err: any) {
