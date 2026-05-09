@@ -41,7 +41,7 @@ export async function getSupabaseServerClient() {
         fetch: (url, init) => {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 10000); // Increased to 10-second timeout
-          return fetch(url, { ...init, signal: controller.signal as any }).finally(() => clearTimeout(timeoutId));
+          return fetch(url, { ...(init || {}), signal: controller.signal as any }).finally(() => clearTimeout(timeoutId));
         },
       },
     }

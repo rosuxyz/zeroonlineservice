@@ -3,41 +3,58 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "./types";
 
 export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
-
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return supabaseResponse; // Demo Mode: Bypass
-  }
-
-  const supabase = createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
+  try {
+    let supabaseResponse = NextResponse.next({
+      request: {
+        headers: request.headers,
       },
+    });
+
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return supabaseResponse; // Demo Mode: Bypass
     }
-  );
 
-  // refreshing the auth token
-  await supabase.auth.getUser();
+    const supabase = createServerClient<Database>(
+      supabaseUrl,
+      supabaseAnonKey,
+      {
+        cookies: {
+          getAll() {
+            return request.cookies.getAll();
+          },
+          setAll(cookiesToSet) {
+            try {
+              // Only set if cookies are available and the method exists
+              if (request.cookies && typeof request.cookies.set === 'function') {
+                cookiesToSet.forEach(({ name, value, options }) =>
+                  request.cookies.set(name, value)
+                );
+              }
+              
+              supabaseResponse = NextResponse.next({
+                request,
+              });
+              
+              cookiesToSet.forEach(({ name, value, options }) =>
+                supabaseResponse.cookies.set(name, value, options)
+              );
+            } catch (err) {
+              console.error("Error setting cookies in middleware:", err);
+            }
+          },
+        },
+      }
+    );
 
-  return supabaseResponse;
+    // refreshing the auth token
+    await supabase.auth.getUser();
+
+    return supabaseResponse;
+  } catch (e) {
+    console.error("Critical updateSession error:", e);
+    return NextResponse.next();
+  }
 }

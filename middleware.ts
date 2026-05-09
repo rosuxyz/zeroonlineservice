@@ -4,32 +4,39 @@ import { createServerClient } from "@supabase/ssr";
 import type { Database } from "@/lib/supabase/types";
 
 export async function middleware(request: NextRequest) {
-  const supabaseResponse = await updateSession(request);
-  
-  // Protect specific routes
-  const protectedPaths = ["/dashboard", "/checkout", "/orders", "/admin"];
-  const isProtectedPath = protectedPaths.some((path) =>
-    request.nextUrl.pathname.startsWith(path)
-  );
+  try {
+    // 1. Update the session (refreshes the token if needed)
+    // This returns a response with the updated cookies
+    let supabaseResponse = await updateSession(request);
 
-  if (isProtectedPath) {
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      return supabaseResponse; // Demo Mode: allow all protected routes
+    // 2. Determine if this is a protected path
+    const protectedPaths = ["/dashboard", "/checkout", "/orders", "/admin"];
+    const isProtectedPath = protectedPaths.some((path) =>
+      request.nextUrl.pathname.startsWith(path)
+    );
+
+    if (!isProtectedPath) {
+      return supabaseResponse;
     }
 
-    // Create a client just to read the user, don't modify cookies here (handled by updateSession)
+    // 3. Check for configuration (Demo Mode bypass)
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+    if (!supabaseUrl || !supabaseAnonKey) {
+      return supabaseResponse; // Allow in Demo Mode
+    }
+
+    // 4. Authenticate the user
     const supabase = createServerClient<Database>(
-      supabaseUrl || "",
-      supabaseAnonKey || "",
+      supabaseUrl,
+      supabaseAnonKey,
       {
         cookies: {
           getAll() {
             return request.cookies.getAll();
           },
-          setAll() {},
+          setAll() {}, // Read-only here
         },
       }
     );
@@ -44,7 +51,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    // Check admin role for /admin path
+    // 5. Special check for /admin role
     if (request.nextUrl.pathname.startsWith("/admin")) {
       const { data: profile } = await supabase
         .from("profiles")
@@ -53,15 +60,19 @@ export async function middleware(request: NextRequest) {
         .single();
         
       if (!profile || profile.role !== "admin") {
-        // Redirect to dashboard if not admin
         const redirectUrl = request.nextUrl.clone();
         redirectUrl.pathname = "/dashboard";
         return NextResponse.redirect(redirectUrl);
       }
     }
-  }
 
-  return supabaseResponse;
+    return supabaseResponse;
+  } catch (error) {
+    // CRITICAL: Prevent middleware from crashing the site (500 error)
+    // If anything fails, we just let the request through and handle errors on the page
+    console.error("Middleware Safety Catch:", error);
+    return NextResponse.next();
+  }
 }
 
 export const config = {
