@@ -16,7 +16,14 @@ export function getSupabaseBrowserClient() {
 
   client = createBrowserClient<Database>(
     supabaseUrl || "",
-    supabaseAnonKey || ""
+    supabaseAnonKey || "",
+    {
+      cookieOptions: {
+        path: '/',
+        sameSite: 'lax',
+        secure: true,
+      }
+    }
   );
   return client;
 }
