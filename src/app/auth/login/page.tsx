@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { Gem, AlertCircle, Loader2 } from "lucide-react";
 import { getURL } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -71,7 +72,7 @@ function LoginForm() {
   };
 
   return (
-    <div className="glass-card rounded-3xl p-8 border border-white/10 relative overflow-hidden">
+    <div className="bg-[#101012] rounded-3xl p-8 border border-white/20 relative overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
       {/* Background effects */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-secondary-500" aria-hidden="true" />
       <div className="absolute -top-24 -right-24 w-48 h-48 bg-primary-500/20 rounded-full blur-[60px]" aria-hidden="true" />
@@ -170,27 +171,40 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
-      {/* Cinematic Blurry Background */}
+    <div className="min-h-screen bg-[#020202] flex flex-col relative overflow-hidden">
+      {/* Liquid Nebula Background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
-        <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-primary-500/15 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-secondary-500/15 rounded-full blur-[120px] animate-pulse delay-700" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-background/40 backdrop-blur-[2px]" />
+        {/* Massive drifting glows */}
+        <div className="absolute top-[-30%] left-[-20%] w-[120%] h-[120%] bg-primary-500/30 rounded-full blur-[250px] animate-[spin_20s_linear_infinite]" />
+        <div className="absolute bottom-[-30%] right-[-20%] w-[120%] h-[120%] bg-secondary-500/30 rounded-full blur-[250px] animate-[spin_25s_linear_infinite_reverse]" />
+        
+        {/* Extreme Global Blur Barrier */}
+        <div className="absolute inset-0 bg-background/60 backdrop-blur-[50px]" />
+        
+        {/* Premium Noise / Film Grain Texture */}
+        <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay pointer-events-none" 
+             style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")` }}>
+        </div>
       </div>
 
       <Navbar />
       
       <main className="flex-1 flex items-center justify-center p-4 pt-24 pb-12 relative z-10">
-        <div className="w-full max-w-md">
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="w-full max-w-md"
+        >
           <Suspense fallback={
-            <div className="glass-card rounded-3xl p-12 border border-white/10 flex flex-col items-center justify-center backdrop-blur-xl">
+            <div className="glass-card rounded-3xl p-12 border border-white/20 flex flex-col items-center justify-center backdrop-blur-3xl shadow-[0_0_100px_rgba(0,0,0,0.8)]">
               <Loader2 className="w-10 h-10 text-primary-500 animate-spin mb-4" />
               <p className="text-gray-400 text-sm">Preparing secure login...</p>
             </div>
           }>
             <LoginForm />
           </Suspense>
-        </div>
+        </motion.div>
       </main>
     </div>
   );
