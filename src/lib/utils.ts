@@ -17,7 +17,7 @@ export function getURL() {
   let url =
     process?.env?.NEXT_PUBLIC_SITE_URL ?? 
     process?.env?.NEXT_PUBLIC_VERCEL_URL ?? 
-    "http://localhost:3000";
+    "https://zeroonlineservice.vercel.app"; // Hardcoded fallback for production
     
   url = url.includes("http") ? url : `https://${url}`;
   // Remove trailing slash if present
