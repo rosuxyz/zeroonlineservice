@@ -50,7 +50,7 @@ export default function SignupPage() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${getURL()}auth/callback?next=/dashboard`,
+        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
       },
     });
   };
@@ -60,7 +60,7 @@ export default function SignupPage() {
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: `${getURL()}auth/callback?next=/dashboard`,
+        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent("/dashboard")}`,
       },
     });
   };

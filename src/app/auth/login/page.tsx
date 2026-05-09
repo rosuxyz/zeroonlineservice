@@ -44,7 +44,7 @@ function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${getURL()}auth/callback?next=${redirectedFrom}`,
+        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
       },
     });
   };
@@ -54,7 +54,7 @@ function LoginForm() {
     await supabase.auth.signInWithOAuth({
       provider: "facebook",
       options: {
-        redirectTo: `${getURL()}auth/callback?next=${redirectedFrom}`,
+        redirectTo: `${getURL()}auth/callback?next=${encodeURIComponent(redirectedFrom)}`,
       },
     });
   };
