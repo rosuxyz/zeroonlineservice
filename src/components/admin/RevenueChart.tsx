@@ -40,7 +40,7 @@ export default function RevenueChart({ data }: RevenueChartProps) {
           tick={{ fill: "#6b7280", fontSize: 11 }}
           axisLine={false}
           tickLine={false}
-          tickFormatter={(v: number) => `$${v}`}
+          tickFormatter={(v: any) => `$${v}`}
           width={45}
         />
         <Tooltip
@@ -51,7 +51,7 @@ export default function RevenueChart({ data }: RevenueChartProps) {
             color: "#fff",
             fontSize: "12px",
           }}
-          formatter={(v: number) => [`$${v}`, "Revenue"]}
+          formatter={(v: any) => [`$${v}`, "Revenue"]}
           cursor={{ stroke: "rgba(14,165,233,0.2)", strokeWidth: 2 }}
         />
         <Area

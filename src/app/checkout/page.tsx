@@ -47,7 +47,7 @@ export default function CheckoutPage() {
   // Load QR URLs set by admin from site_settings
   useEffect(() => {
     getSiteSettings("qr_codes").then((data) => {
-      if (data) setQrUrls(data);
+      if (data) setQrUrls(data as { esewa_url: string; khalti_url: string });
     });
   }, []);
 

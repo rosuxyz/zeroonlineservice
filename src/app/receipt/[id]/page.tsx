@@ -24,7 +24,7 @@ export default async function ReceiptPage({ params }: { params: { id: string } }
           <ArrowLeft className="w-4 h-4" /> Back to Orders
         </Link>
         <button 
-          onClick="window.print()" 
+          id="print-button"
           className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-semibold text-sm transition-colors shadow-sm"
         >
           <Download className="w-4 h-4" /> Print Receipt
@@ -140,7 +140,7 @@ export default async function ReceiptPage({ params }: { params: { id: string } }
       
       {/* Script to handle print button in client */}
       <script dangerouslySetInnerHTML={{ __html: `
-        document.querySelector('button')?.addEventListener('click', () => window.print());
+        document.getElementById('print-button')?.addEventListener('click', () => window.print());
       `}} />
     </div>
   );
