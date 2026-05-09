@@ -34,8 +34,9 @@ function LoginForm() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push(redirectedFrom);
-      router.refresh();
+      // Use window.location for a hard redirect to ensure all layouts 
+      // and middleware recognize the new session immediately.
+      window.location.href = redirectedFrom;
     }
   };
 
