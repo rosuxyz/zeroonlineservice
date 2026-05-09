@@ -12,12 +12,18 @@ export async function GET(request: Request) {
   const protocol = request.headers.get("x-forwarded-proto") || (host.includes("localhost") ? "http" : "https");
   const origin = `${protocol}://${host}`;
 
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error("Missing Supabase environment variables");
+    return NextResponse.redirect(`${origin}/auth/login?error=Missing configuration`);
+  }
+
   if (code) {
     const supabase = await getSupabaseServerClient();
     const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    console.error("Auth code exchange error:", error);
   }
 
   return NextResponse.redirect(`${origin}/auth/auth-code-error`);
