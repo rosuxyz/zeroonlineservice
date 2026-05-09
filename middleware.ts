@@ -5,8 +5,12 @@ import type { Database } from "@/lib/supabase/types";
 
 export async function middleware(request: NextRequest) {
   try {
+    // 0. Total bypass for the home page to prevent any possible crashes
+    if (request.nextUrl.pathname === "/") {
+      return NextResponse.next();
+    }
+
     // 1. Update the session (refreshes the token if needed)
-    // This returns a response with the updated cookies
     let supabaseResponse = await updateSession(request);
 
     // 2. Determine if this is a protected path

@@ -170,13 +170,20 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      {/* Cinematic Blurry Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute top-1/4 -left-20 w-[600px] h-[600px] bg-primary-500/15 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-1/4 -right-20 w-[600px] h-[600px] bg-secondary-500/15 rounded-full blur-[120px] animate-pulse delay-700" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-background/40 backdrop-blur-[2px]" />
+      </div>
+
       <Navbar />
       
-      <main className="flex-1 flex items-center justify-center p-4 pt-24 pb-12">
+      <main className="flex-1 flex items-center justify-center p-4 pt-24 pb-12 relative z-10">
         <div className="w-full max-w-md">
           <Suspense fallback={
-            <div className="glass-card rounded-3xl p-12 border border-white/10 flex flex-col items-center justify-center">
+            <div className="glass-card rounded-3xl p-12 border border-white/10 flex flex-col items-center justify-center backdrop-blur-xl">
               <Loader2 className="w-10 h-10 text-primary-500 animate-spin mb-4" />
               <p className="text-gray-400 text-sm">Preparing secure login...</p>
             </div>

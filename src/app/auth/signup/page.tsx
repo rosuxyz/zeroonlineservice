@@ -76,12 +76,19 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col relative overflow-hidden">
+      {/* Cinematic Blurry Background */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        <div className="absolute top-1/4 -right-20 w-[600px] h-[600px] bg-secondary-500/15 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-1/4 -left-20 w-[600px] h-[600px] bg-primary-500/15 rounded-full blur-[120px] animate-pulse delay-700" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-background/40 backdrop-blur-[2px]" />
+      </div>
+
       <Navbar />
       
-      <main className="flex-1 flex items-center justify-center p-4 pt-24 pb-12">
+      <main className="flex-1 flex items-center justify-center p-4 pt-24 pb-12 relative z-10">
         <div className="w-full max-w-md">
-          <div className="glass-card rounded-3xl p-8 border border-white/10 relative overflow-hidden">
+          <div className="glass-card rounded-3xl p-8 border border-white/10 relative overflow-hidden backdrop-blur-xl shadow-[0_0_50px_rgba(0,0,0,0.3)]">
             {/* Background effects */}
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary-500 to-primary-500" aria-hidden="true" />
             <div className="absolute -top-24 -left-24 w-48 h-48 bg-secondary-500/20 rounded-full blur-[60px]" aria-hidden="true" />
